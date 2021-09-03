@@ -1,0 +1,58 @@
+extends layout
+
+block content
+  style.
+    .reqBtn{
+      font-size:30px
+    }
+
+  h1="获取授权页面，为网络防止被封禁，此授权每天凌晨5点失效。失效之后请重新打开此页面点击授权按钮"
+  h3="当前位置:中国香港(2021/9/2)"
+  br
+  br
+  div(id="id_check")
+    h1(style="background-color: #fffdc3") 正在检测授权状态...
+  div(id="id_check_ok" style="display:none")
+    h1(style="background-color: #7eff94") 当前网络已经授权使用
+  div(id="id_check_fail" style="display:none")
+    input(type="button" class="reqBtn" value="点我授权当前网络")
+
+  script.
+    var local_device_key = null;
+    $(function(){
+      local_device_key = window.localStorage.getItem('local_key');
+      if(!local_device_key){
+        local_device_key = Math.random()+'';
+        window.localStorage.setItem('local_key',local_device_key);
+      }
+      auth(null,'get');
+    });
+    $('.reqBtn').click(auth);
+    function auth(args,type='set'){ 
+            $("#id_check_ok").hide(); 
+            $("#id_check_fail").hide();
+            $("#id_check").show();
+
+      $.post( "/",
+        {
+          type:type,key:local_device_key
+        },
+        function(data) {
+          $("#id_check").hide();
+          if(data.status===0){
+            $("#id_check_ok").show();
+          }else{
+            if(type==='set'){
+              alert( "有些原因导致无法授权，重试几次都不行的话直接联系我把" );
+            }
+           
+            $("#id_check_fail").show();
+          }
+          console.log(data);
+      },'json')
+        .fail(function() {
+          alert( "未知原因导致无法提交，可能是网络不好导致的，可以刷新页面后重试，还是不行就联系我吧" );
+        });
+    }
+
+
