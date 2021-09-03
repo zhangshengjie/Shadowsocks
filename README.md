@@ -16,12 +16,6 @@
    docker tag cejay_ss:1.8.0 cejay/shadowsocks:1.8.0
    docker push cejay/shadowsocks:1.8.0
 
-3. 运行docker:
-
-   *CAP_NET_ADMIN:允许执行网络管理任务*
-   *CAP_NET_RAW:允许使用原始套接字*
-
-   docker run -d  -p 88:80  -p 8801:8801  --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="80" -e ss_post="8801" -e ss_pwd="ECgV9h" cejay_ss:last
 
 # 远程服务器上面部署 (Ubuntu 20)
 apt update
