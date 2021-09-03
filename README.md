@@ -7,35 +7,23 @@
  * @LastEditTime: 2021-09-03 15:34:22
 -->
 # Shadowsocks
-Shadowsocks
+# 自己使用的ss搭建
 
+1. 创建docker：
+   docker build -f ./Dockerfile -t cejay_ss:1.8.0 .
 
-创建docker：
-docker build -f ./Dockerfile -t cejay_ss:1.8.0 .
+2. 发布docker:
+   docker tag cejay_ss:1.8.0 cejay/shadowsocks:1.8.0
+   docker push cejay/shadowsocks:1.8.0
 
-发布docker:
-docker tag cejay_ss:1.8.0 cejay/shadowsocks:1.8.0
-docker push cejay/shadowsocks:1.8.0
+3. 运行docker:
 
-docker search cejay/shadowsocks
+   *CAP_NET_ADMIN:允许执行网络管理任务*
+   *CAP_NET_RAW:允许使用原始套接字*
 
+   docker run -d  -p 88:80  -p 8801:8801  --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="80" -e ss_post="8801" -e ss_pwd="ECgV9h" cejay_ss:last
 
-
-
-CAP_NET_ADMIN:允许执行网络管理任务
-CAP_NET_RAW:允许使用原始套接字
-
-运行docker:
-docker run -d  -p 88:80  -p 8801:8801  --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="80" -e ss_post="8801" -e ss_pwd="ECgV9h" cejay_ss:last
-
-docker ps
-
-进入docker交互命令行：
-docker exec -it xxxxxxxxxxxx /bin/sh
-
-
-
-#远程服务器上面部署 (Ubuntu 20)
+# 远程服务器上面部署 (Ubuntu 20)
 apt update
 
 apt-get -y install \
@@ -57,7 +45,7 @@ apt-get -y install docker-ce docker-ce-cli containerd.io nginx
 
 docker pull cejay/shadowsocks:1.8.0
 
-docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="ECgV9h" -e proxy_ip="47.242.211.230" cejay/shadowsocks:1.8.0
+docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="我的密码" -e proxy_ip="47.242.211.230" cejay/shadowsocks:1.8.0
 
         #测试docker是否正常
         docker ps -a
@@ -65,7 +53,6 @@ docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-ad
         telnet 127.0.0.1 8012
 
 #配置nginx代理
-
 
 echo -e "server {\n\
     listen 80;\n\
