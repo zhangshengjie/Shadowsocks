@@ -4,7 +4,7 @@
  * @Autor: z.cejay@gmail.com
  * @Date: 2021-09-02 13:36:15
  * @LastEditors: cejay
- * @LastEditTime: 2021-09-03 15:08:28
+ * @LastEditTime: 2021-09-03 17:35:18
  */
 var express = require('express');
 var router = express.Router();
@@ -72,7 +72,6 @@ router.post('/', async (req, res, next) => {
     }
     console.log(req.body);
   }
-
   res.json(resp);
 });
 

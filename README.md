@@ -4,17 +4,17 @@
  * @Autor: z.cejay@gmail.com
  * @Date: 2021-09-01 20:21:24
  * @LastEditors: cejay
- * @LastEditTime: 2021-09-03 15:34:22
+ * @LastEditTime: 2021-11-07 14:45:16
 -->
 # Shadowsocks
 # 自己使用的ss搭建
 
 1. 创建docker：
-   docker build -f ./Dockerfile -t cejay_ss:1.8.0 .
+   docker build -f ./Dockerfile -t cejay_ss:1.8.1 .
 
 2. 发布docker:
-   docker tag cejay_ss:1.8.0 cejay/shadowsocks:1.8.0
-   docker push cejay/shadowsocks:1.8.0
+   docker tag cejay_ss:1.8.1 cejay/shadowsocks:1.8.1
+   docker push cejay/shadowsocks:1.8.1
 
 
 # 远程服务器上面部署 (Ubuntu 20)
@@ -37,14 +37,14 @@ apt-get update
 
 apt-get -y install docker-ce docker-ce-cli containerd.io nginx
 
-docker pull cejay/shadowsocks:1.8.0
+docker pull cejay/shadowsocks:1.8.1
 
-docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="我的密码" -e proxy_ip="47.242.211.230" cejay/shadowsocks:1.8.0
+docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="密码xxxE" -e proxy_ip="47.242.211.230" cejay/shadowsocks:1.8.1
 
         #测试docker是否正常
         docker ps -a
         curl http://127.0.0.1:8011
-        telnet 127.0.0.1 8012
+        telnet 127.0.0.1 8801
 
 #配置nginx代理
 
