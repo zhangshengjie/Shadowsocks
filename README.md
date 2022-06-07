@@ -1,56 +1,35 @@
-<!--
- * @Description: 
- * @Version: 1.0
- * @Autor: z.cejay@gmail.com
- * @Date: 2021-09-01 20:21:24
- * @LastEditors: cejay
- * @LastEditTime: 2021-11-07 14:45:16
--->
 # Shadowsocks
 # 自己使用的ss搭建
 
+## 编译 发布
 1. 创建docker：
-   docker build -f ./Dockerfile -t cejay_ss:1.8.1 .
+   docker build -f ./Dockerfile -t cejay_ss:1.8.3 .
 
 2. 发布docker:
-   docker tag cejay_ss:1.8.1 cejay/shadowsocks:1.8.1
-   docker push cejay/shadowsocks:1.8.1
+   docker tag cejay_ss:1.8.3 cejay/shadowsocks:1.8.3
+   docker push cejay/shadowsocks:1.8.3
+
+## 部署 远程服务器上面部署 (Ubuntu 20)
+    假设shadowsocks连接密码为 password
+    你服务器的公网IP为:1.2.3.4
+    指向你服务器的域名为:www.ss.com
+sudo apt update
+sudo curl -sSL https://get.daocloud.io/docker | sh
+apt-get -y install  nginx
+sudo docker pull cejay/shadowsocks:1.8.3
+sudo docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="password" -e proxy_ip="1.2.3.4" cejay/shadowsocks:1.8.3
 
 
-# 远程服务器上面部署 (Ubuntu 20)
-apt update
-
-apt-get -y install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
-
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
-echo \
-  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-apt-get update
-
-apt-get -y install docker-ce docker-ce-cli containerd.io nginx
-
-docker pull cejay/shadowsocks:1.8.1
-
-docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="密码xxxE" -e proxy_ip="47.242.211.230" cejay/shadowsocks:1.8.1
-
-        #测试docker是否正常
-        docker ps -a
-        curl http://127.0.0.1:8011
-        telnet 127.0.0.1 8801
-
-#配置nginx代理
+    测试docker是否正常
+    docker ps -a
+    curl http://127.0.0.1:8011
+    telnet 127.0.0.1 8801
+    在云服务器管理界面中开放 80、8012 （tcp 和 udp）端口
+配置nginx代理
 
 echo -e "server {\n\
     listen 80;\n\
-    server_name ss.cejay.online;\n\
+    server_name www.ss.com;\n\
     access_log /var/log/nginx/access.log;\n\
     location / {\n\
         proxy_set_header Host \$host;\n\
@@ -62,6 +41,13 @@ echo -e "server {\n\
     }\n\
 }" > /etc/nginx/conf.d/ss.conf
 
-
-
 nginx -s reload
+
+    下载客户端[shadowsocks](https://github.com/shadowsocks/shadowsocks-windows/releases)
+    添加节点：
+    地址：www.ss.com
+    端口：8012
+    加密方式:chacha20-ietf-poly1305
+    密码:password
+
+每次使用前都需要打开 www.ss.com 点击允许后才可以使用
