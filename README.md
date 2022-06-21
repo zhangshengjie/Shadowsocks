@@ -3,21 +3,22 @@
 
 ## 编译 发布
 1. 创建docker：
-   docker build -f ./Dockerfile -t cejay_ss:1.8.3 .
+   docker build -f ./Dockerfile -t cejay_ss:0.0.1 .
 
 2. 发布docker:
-   docker tag cejay_ss:1.8.3 cejay/shadowsocks:1.8.3
-   docker push cejay/shadowsocks:1.8.3
+   docker tag cejay_ss:0.0.1 cejay/shadowsocks:0.0.1
+   docker push cejay/shadowsocks:0.0.1
 
 ## 部署 远程服务器上面部署 (Ubuntu 20)
     假设shadowsocks连接密码为 password
     你服务器的公网IP为:1.2.3.4
     指向你服务器的域名为:www.ss.com
+    假设你固定授权的IP为:3.4.5.6
 sudo apt update
 sudo curl -sSL https://get.daocloud.io/docker | sh
 apt-get -y install  nginx
-sudo docker pull cejay/shadowsocks:1.8.3
-sudo docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="password" -e proxy_ip="1.2.3.4" cejay/shadowsocks:1.8.3
+sudo docker pull cejay/shadowsocks:0.0.1
+sudo docker run -d -p 0.0.0.0:8011:8011/tcp -p 8801:8012 --cap-add NET_ADMIN --cap-add NET_RAW --name "shadowsocks" -e PORT="8011" -e ss_post="8012" -e ss_pwd="password" -e proxy_ip="1.2.3.4" -e allow_ip="3.4.5.6" cejay/shadowsocks:0.0.1
 
 
     测试docker是否正常

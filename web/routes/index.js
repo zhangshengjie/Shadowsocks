@@ -4,7 +4,7 @@
  * @Autor: z.cejay@gmail.com
  * @Date: 2021-09-02 13:36:15
  * @LastEditors: cejay
- * @LastEditTime: 2021-09-03 17:35:18
+ * @LastEditTime: 2022-06-21 13:32:08
  */
 var express = require('express');
 var router = express.Router();
@@ -13,6 +13,7 @@ const { env } = require('process');
 
 
 const ss_port = env.ss_post;
+const allow_ip = env.allow_ip;
 console.log(`port:${ss_port}`);
 
 /**
@@ -149,6 +150,12 @@ function sleep(time = 0) {
 
 async function deamon() {
   console.log('deamon start');
+  try {
+    let a1 = await execShell('ufw allow proto tcp from ' + allow_ip + ' to any port ' + ss_port);
+    console.log(a1);
+  } catch (e) {
+    console.log(e);
+  }
   while (true) {
     console.log('deamon each');
     try {
@@ -166,6 +173,12 @@ async function deamon() {
           }
         }
         user_ip_map = new Map();
+        try {
+          let a1 = await execShell('ufw allow proto tcp from ' + allow_ip + ' to any port ' + ss_port);
+          console.log(a1);
+        } catch (e) {
+          console.log(e);
+        }
       }
     } catch (e) {
       console.log(e);

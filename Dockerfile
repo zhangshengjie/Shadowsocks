@@ -42,6 +42,9 @@ ENV ss_pwd="reset_password_here"
 
 ENV proxy_ip = "127.0.0.1"
 
+# 静态永久允许的IP
+ENV allow_ip = "127.0.0.1"
+
 # EXPOSE ${PORT} 
 # EXPOSE ${ss_post}
 ENTRYPOINT ["/root/start.sh"]
